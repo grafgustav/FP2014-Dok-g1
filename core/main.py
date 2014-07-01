@@ -13,6 +13,7 @@ from scipy.spatial.distance import cdist
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.lines import Line2D
 from curses.textpad import rectangle
+from CalcHelper import Calculator
 
 '''
 Created on 27.06.2014
@@ -36,21 +37,26 @@ def bla():
     image = Image.open(document_image_filename)
     im_arr = np.asarray(image, dtype='float32')
     
-    step_size = 50
+    step_size = 15
     cell_size = 5
     frames, desc = vlfeat.vl_dsift(im_arr, step=step_size, size=cell_size)
     
     frames = frames.T
     desc = desc.T
+    print desc.shape
     
     print frames
     print desc
-    
-    n_centroids = 40
+    print "frames:" + str(frames.shape)
+    n_centroids = 50
     codebook, labels = kmeans2(desc, n_centroids, iter=20, minit='points')
     
-    for i in labels:
-        print i
+    print labels.shape
+#     for i in labels:
+#         print i
+    
+    print codebook
+    print codebook.shape
     
 #     draw_descriptor_cells = True
     fig = plt.figure()
@@ -79,7 +85,30 @@ def bla():
 #                 ax.add_line(line_v)
         ax.add_patch(rect)
     
-    plt.show()
+#     plt.show()
+    
+    # calculate bag of feature representations of each word marked by the ground truth
+    calc = Calculator(codebook, labels, frames)
+    bagOfFeatures = []
+    for g in GT:
+        bagOfFeatures.append(calc.getHistogramOfWord(g))
+        
+    IFS = {}
+    for i in range(n_centroids):
+        IFS[i]=[]
+        
+    i = 0
+    for word in bagOfFeatures:
+        j = 0
+        for k in word:
+            if k>0:
+                IFS[j].append(i)
+            j += 1      
+        i += 1
+    
+    for i in IFS:
+        print IFS[i]
+    
 
 if __name__ == '__main__':
     bla()
