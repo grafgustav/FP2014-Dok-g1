@@ -14,6 +14,7 @@ from matplotlib.patches import Circle, Rectangle
 from matplotlib.lines import Line2D
 from curses.textpad import rectangle
 from CalcHelper import Calculator
+from sets import Set
 
 '''
 Created on 27.06.2014
@@ -37,8 +38,8 @@ def bla():
     image = Image.open(document_image_filename)
     im_arr = np.asarray(image, dtype='float32')
     
-    step_size = 15
-    cell_size = 5
+    step_size = 10
+    cell_size = 6
     frames, desc = vlfeat.vl_dsift(im_arr, step=step_size, size=cell_size)
     
     frames = frames.T
@@ -48,7 +49,7 @@ def bla():
     print frames
     print desc
     print "frames:" + str(frames.shape)
-    n_centroids = 50
+    n_centroids = 200
     codebook, labels = kmeans2(desc, n_centroids, iter=20, minit='points')
     
     print labels.shape
@@ -108,7 +109,39 @@ def bla():
     
     for i in IFS:
         print IFS[i]
+        
+    # "the" als Testword definiert
+#     for k in np.arange(len(GT)):
+#         test = GT[k]
+#     
+#         testHisto = calc.getHistogramOfWord(test)
+#     
+#         print testHisto
+#         print testHisto.shape
+#     
+#         newSet = []
+#         j = 0
+#         for i in testHisto:
+#             if i > 0:
+#                 newSet = newSet + IFS[j]
+#             j += 1
+#     
+#         newSet = np.array(newSet)
+#         newSet = np.unique(newSet)
+#         print newSet.shape
     
+    test = GT[4]
+    
+    testHisto = calc.getHistogramOfWord(test)
+    testHisto = np.array([testHisto])    
+    
+    bagOfFeatures = np.array(bagOfFeatures)
+    print bagOfFeatures.shape
+    print testHisto.shape
+    
+    vecDist = scipy.spatial.distance.cdist(testHisto, bagOfFeatures, metric="cityblock")
+    vecDist = np.argsort(vecDist)
+    print vecDist[0,1:10]
 
 if __name__ == '__main__':
     bla()
