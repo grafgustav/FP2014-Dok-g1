@@ -25,9 +25,9 @@ Created on 27.06.2014
 def project():
     
     #Constants
-    step_size = 8
-    cell_size = 4
-    n_centroids = 500
+    step_size = 10
+    cell_size = 5
+    n_centroids = 50
     
     testword_number = 9
     
@@ -53,20 +53,7 @@ def project():
     frames = frames.T
     desc = desc.T
     codebook, labels = kmeans2(desc, n_centroids, iter=20, minit='points')  
-    
-    # TODO: write plot method 
-    # Draw plot
-#     draw_descriptor_cells = True
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.imshow(im_arr, cmap=cm.get_cmap('Greys_r'))
-    ax.hold(True)
-    ax.autoscale(enable=False)
-    for i in GT:
-        rect = Rectangle((i[0], i[1]), (i[2]-i[0]), (i[3]-i[1]), alpha=1, lw=1, color="red", fill=False)
-        ax.add_patch(rect) 
-#   plt.show()
-    
+     
     
     
     # calculate bag of feature representations of each word marked by the ground truth
@@ -109,7 +96,7 @@ def project():
     newSet = np.array(newSet)
     newSet = np.unique(newSet)
 #     newSet = newSet[:]
-    print "Inverted FileStrukture %s"  % newSet
+#     print "Inverted FileStrukture %s"  % newSet
      
     testHisto = calc.getHistogramOfWord(test)
     testHisto = np.array([testHisto])    
@@ -117,11 +104,34 @@ def project():
     bagOfFeatures = np.array(bagOfFeatures)
     bagOfFeatures = bagOfFeatures[newSet]
     
-    print bagOfFeatures.shape
+#     print bagOfFeatures.shape
      
     vecDist = scipy.spatial.distance.cdist(testHisto, bagOfFeatures, metric="cityblock")
     vecDist = np.argsort(vecDist)
-#     print vecDist[0,1:10]
+    vecDist = vecDist[0,1:10]
+    
+    draw_plot(GT[testword_number], GT[vecDist], im_arr)
+
+def draw_plot(test_word,words_found, im_arr):
+    
+    ''' 
+    draws a plot for the results. blue rectangle is for test word. red rectangle is for similar word found.
+    :param: test_word: an array with 2 koordinates, stored like the GT.
+            words_found: an matrix with all similiar words. each line contains 2 koordinates, stored like the GT.
+            im_arr: the im_arr, cretated trough np.asarray()
+    '''
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.imshow(im_arr, cmap=cm.get_cmap('Greys_r'))
+    ax.hold(True)
+    ax.autoscale(enable=False)
+    for i in words_found:
+        rect = Rectangle((i[0], i[1]), (i[2]-i[0]), (i[3]-i[1]), alpha=1, lw=1, color="red", fill=False)
+        ax.add_patch(rect)
+    rect_1 = Rectangle((test_word[0], test_word[1]), (test_word[2]-test_word[0]), (test_word[3]-test_word[1]), alpha=1, lw=1, color="blue", fill=False)
+    ax.add_patch(rect_1)      
+    plt.show()
 
 if __name__ == '__main__':
     project()
