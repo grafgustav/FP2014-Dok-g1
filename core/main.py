@@ -25,9 +25,11 @@ Created on 27.06.2014
 def project():
     
     #Constants
-    step_size = 10
-    cell_size = 6
-    n_centroids = 50
+    step_size = 8
+    cell_size = 4
+    n_centroids = 500
+    
+    testword_number = 9
     
     # Setting Files up.
     File_String = "2700270"
@@ -52,8 +54,8 @@ def project():
     desc = desc.T
     codebook, labels = kmeans2(desc, n_centroids, iter=20, minit='points')  
     
+    # TODO: write plot method 
     # Draw plot
-    
 #     draw_descriptor_cells = True
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -73,6 +75,9 @@ def project():
     for g in GT:
         bagOfFeatures.append(calc.getHistogramOfWord(g))
         
+#     print bagOfFeatures
+#     print bagOfFeatures.shape
+        
     IFS = {}
     for i in range(n_centroids):
         IFS[i]=[]
@@ -85,43 +90,38 @@ def project():
                 IFS[j].append(i)
             j += 1      
         i += 1
-    
-    for i in IFS:
-        print IFS[i]
+
         
    #"the" als Testword definiert
-   
-#     for k in np.arange(len(GT)):
-#         test = GT[k]
-#      
-#         testHisto = calc.getHistogramOfWord(test)
-#      
-# #         print testHisto
-# #         print testHisto.shape
-#      
-#         newSet = []
-#         j = 0
-#         for i in testHisto:
-#             if i > 0:
-#                 newSet = newSet + IFS[j]
-#             j += 1
-#      
-#         newSet = np.array(newSet)
-#         newSet = np.unique(newSet)
-#         print "InvertedFileStrukture" + str(newSet.shape)
-    
-    test = GT[4]
+     
+    test = GT[testword_number]
+  
+    testHisto = calc.getHistogramOfWord(test)
+
+  
+    newSet = []
+    j = 0
+    for i in testHisto:
+        if i > 0:
+            newSet = newSet + IFS[j]
+        j += 1
+  
+    newSet = np.array(newSet)
+    newSet = np.unique(newSet)
+#     newSet = newSet[:]
+    print "Inverted FileStrukture %s"  % newSet
      
     testHisto = calc.getHistogramOfWord(test)
     testHisto = np.array([testHisto])    
      
     bagOfFeatures = np.array(bagOfFeatures)
+    bagOfFeatures = bagOfFeatures[newSet]
+    
     print bagOfFeatures.shape
-    print testHisto.shape
      
     vecDist = scipy.spatial.distance.cdist(testHisto, bagOfFeatures, metric="cityblock")
     vecDist = np.argsort(vecDist)
-    print vecDist[0,1:10]
+#     print vecDist[0,1:10]
 
 if __name__ == '__main__':
     project()
