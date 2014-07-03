@@ -22,42 +22,37 @@ Created on 27.06.2014
 @author: abelst00
 '''
 
-def bla():
-
-    GT = []
-    file = open('../resources/GT/2700270.gtp')
-    for line in file:
-        t = line.split()
-        GT.append([int(t[0]),int(t[1]),int(t[2]),int(t[3])])
-        
+def project():
     
-    GT = np.array(GT)
-#     print GT
-    
-    document_image_filename = '../resources/2700270.png'
-    image = Image.open(document_image_filename)
-    im_arr = np.asarray(image, dtype='float32')
-    
+    #Constants
     step_size = 10
     cell_size = 6
-    frames, desc = vlfeat.vl_dsift(im_arr, step=step_size, size=cell_size)
+    n_centroids = 50
     
+    # Setting Files up.
+    File_String = "2700270"
+    
+    
+    file = open("../resources/GT/%s.gtp" % File_String)
+    document_image_filename = "../resources/pages/%s.png" % File_String
+    
+    
+    # loads the GT and stores it in a numpy array
+    GT = []
+    for line in file:
+        t = line.split()
+        GT.append([int(t[0]),int(t[1]),int(t[2]),int(t[3])])         
+    GT = np.array(GT)
+    
+    # calculate codebook, labels n stuff
+    image = Image.open(document_image_filename)
+    im_arr = np.asarray(image, dtype='float32')
+    frames, desc = vlfeat.vl_dsift(im_arr, step=step_size, size=cell_size) 
     frames = frames.T
     desc = desc.T
-    print desc.shape
+    codebook, labels = kmeans2(desc, n_centroids, iter=20, minit='points')  
     
-    print frames
-    print desc
-    print "frames:" + str(frames.shape)
-    n_centroids = 200
-    codebook, labels = kmeans2(desc, n_centroids, iter=20, minit='points')
-    
-    print labels.shape
-#     for i in labels:
-#         print i
-    
-    print codebook
-    print codebook.shape
+    # Draw plot
     
 #     draw_descriptor_cells = True
     fig = plt.figure()
@@ -66,27 +61,11 @@ def bla():
     ax.hold(True)
     ax.autoscale(enable=False)
     for i in GT:
-#     colormap = cm.get_cmap('jet')
-#     desc_len = cell_size * 4
-#     for (x, y), label in zip(frames, labels):
-#         color = colormap(label / float(n_centroids))
-#         circle = Circle((x, y), radius=1, fc=color, ec=color, alpha=1)
-#         print ((i[0], i[1]), (i[2]-i[0]), (i[3]-i[1]))
         rect = Rectangle((i[0], i[1]), (i[2]-i[0]), (i[3]-i[1]), alpha=1, lw=1, color="red", fill=False)
-        
-
-#         ax.add_patch(circle)
-#         if draw_descriptor_cells:
-#             for p_factor in [0.25, 0.5, 0.75]:
-#                 offset_dyn = desc_len * (0.5 - p_factor)
-#                 offset_stat = desc_len * 0.5
-#                 line_h = Line2D((x - offset_stat, x + offset_stat), (y - offset_dyn, y - offset_dyn), alpha=0.08, lw=1)
-#                 line_v = Line2D((x - offset_dyn , x - offset_dyn), (y - offset_stat, y + offset_stat), alpha=0.08, lw=1)
-#                 ax.add_line(line_h)
-#                 ax.add_line(line_v)
-        ax.add_patch(rect)
+        ax.add_patch(rect) 
+#   plt.show()
     
-#     plt.show()
+    
     
     # calculate bag of feature representations of each word marked by the ground truth
     calc = Calculator(codebook, labels, frames)
@@ -110,38 +89,39 @@ def bla():
     for i in IFS:
         print IFS[i]
         
-    # "the" als Testword definiert
+   #"the" als Testword definiert
+   
 #     for k in np.arange(len(GT)):
 #         test = GT[k]
-#     
+#      
 #         testHisto = calc.getHistogramOfWord(test)
-#     
-#         print testHisto
-#         print testHisto.shape
-#     
+#      
+# #         print testHisto
+# #         print testHisto.shape
+#      
 #         newSet = []
 #         j = 0
 #         for i in testHisto:
 #             if i > 0:
 #                 newSet = newSet + IFS[j]
 #             j += 1
-#     
+#      
 #         newSet = np.array(newSet)
 #         newSet = np.unique(newSet)
-#         print newSet.shape
+#         print "InvertedFileStrukture" + str(newSet.shape)
     
     test = GT[4]
-    
+     
     testHisto = calc.getHistogramOfWord(test)
     testHisto = np.array([testHisto])    
-    
+     
     bagOfFeatures = np.array(bagOfFeatures)
     print bagOfFeatures.shape
     print testHisto.shape
-    
+     
     vecDist = scipy.spatial.distance.cdist(testHisto, bagOfFeatures, metric="cityblock")
     vecDist = np.argsort(vecDist)
     print vecDist[0,1:10]
 
 if __name__ == '__main__':
-    bla()
+    project()
