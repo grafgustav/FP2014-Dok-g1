@@ -42,13 +42,15 @@ def project():
     file = open("../resources/GT/%s.gtp" % File_String)
     document_image_filename = "../resources/pages/%s.png" % File_String
     
-    
     # loads the GT and stores it in a numpy array
     GT = []
+    words = []
     for line in file:
         t = line.split()
-        GT.append([int(t[0]),int(t[1]),int(t[2]),int(t[3])])         
+        GT.append([int(t[0]),int(t[1]),int(t[2]),int(t[3])])
+        words.append(t[4])
     GT = np.array(GT)
+    words = np.array(words)
     
     print "Calculating Codebook..."
     
@@ -143,7 +145,7 @@ def project():
     vecDist = vecDist[0,1:10]
     
     print "Drawing results..."
-    draw_plot(GT[testword_number], GT[vecDist], im_arr)
+#     draw_plot(GT[testword_number], GT[vecDist], im_arr)
     
     print "Calculating distances using the spatial pyramid..."
     
@@ -154,9 +156,11 @@ def project():
     vecDist = vecDist[0,1:10]
     
     print "Drawing results..."
-    draw_plot(GT[testword_number], GT[vecDist], im_arr)
+    calculate_accuary(testword_number, vecDist, words, GT, im_arr)
 
-def draw_plot(test_word,words_found, im_arr):
+
+
+def draw_plot(test_word, words_found, words_should_be, im_arr):
     
     ''' 
     draws a plot for the results. blue rectangle is for test word. red rectangle is for similar word found.
@@ -173,9 +177,36 @@ def draw_plot(test_word,words_found, im_arr):
     for i in words_found:
         rect = Rectangle((i[0], i[1]), (i[2]-i[0]), (i[3]-i[1]), alpha=1, lw=1, color="red", fill=False)
         ax.add_patch(rect)
-    rect_1 = Rectangle((test_word[0], test_word[1]), (test_word[2]-test_word[0]), (test_word[3]-test_word[1]), alpha=1, lw=1, color="blue", fill=False)
-    ax.add_patch(rect_1)      
+    for i in words_should_be:
+        rect_1 = Rectangle((i[0], i[1]), (i[2]-i[0]), (i[3]-i[1]), alpha=1, lw=1, color="green", fill=False)
+        ax.add_patch(rect_1)
+    rect_2 = Rectangle((test_word[0], test_word[1]), (test_word[2]-test_word[0]), (test_word[3]-test_word[1]), alpha=1, lw=1, color="blue", fill=False)
+    ax.add_patch(rect_2)
+    
     plt.show()
+    
+def calculate_accuary(test_word_number, words_found_number, words, GT, im_arr):
+    
+    words_should_be = []
+    string = words[test_word_number]
+    
+    k = 0
+    for i in words:
+        if string==i:
+            words_should_be.append(k)
+        k += 1
+        
+    words_should_be = np.array(words_should_be)
+    words_array = words[words_found_number]
+
+    print "Testword: \t\t [%s]" % string
+    print "Testword (Nr) \t\t %s" % test_word_number
+    print "Words should: \t\t %s" % words[words_should_be]
+    print "Words should (Nr):\t %s" % words_should_be
+    print "Words found: \t\t %s" % words_array
+    print "Words found (Nr):\t %s" % words_found_number
+    
+    draw_plot(GT[test_word_number], GT[words_found_number], GT[words_should_be], im_arr)
 
 if __name__ == '__main__':
     project()
