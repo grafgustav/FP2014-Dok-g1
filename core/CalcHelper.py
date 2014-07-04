@@ -24,3 +24,32 @@ class Calculator(object):
             i += 1
             
         return histo
+    
+    def getSpatialPyramidVector(self, word):
+        '''
+        Returns the spacial pyramid of a word segment
+        The  word gets separated as shown in the presentation slides (Complete, Left, Right)
+        :param word: The word the spatial pyramid gets calculated to
+        :type numpy array with shape = (1, 3xVOC_SIZE)
+        '''
+        
+        result = np.zeros(len(self.centroids) * 3)
+        # add complete histogram to result
+        j = 0
+        for i in self.getHistogramOfWord(word):
+            result[j]  = i
+            j += 1
+        
+        leftBorders = [word[0], word[1], round(word[2]/2.0), word[3]]
+        
+        for i in self.getHistogramOfWord(leftBorders):
+            result[j] = i 
+            j += 1
+        
+        rightBorders = [round(word[2]/2.0), word[1], word[2], word[3]]
+        
+        for i in self.getHistogramOfWord(rightBorders):
+            result[j] = i 
+            j += 1
+            
+        return result

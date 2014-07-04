@@ -24,6 +24,8 @@ Created on 27.06.2014
 
 def project():
     
+    print "Initializing program..."
+    
     #Constants
     step_size = 10
     cell_size = 5
@@ -34,6 +36,8 @@ def project():
     # Setting Files up.
     File_String = "2700270"
     
+    
+    print "Loading Ground Truth..."
     
     file = open("../resources/GT/%s.gtp" % File_String)
     document_image_filename = "../resources/pages/%s.png" % File_String
@@ -46,6 +50,8 @@ def project():
         GT.append([int(t[0]),int(t[1]),int(t[2]),int(t[3])])         
     GT = np.array(GT)
     
+    print "Calculating Codebook..."
+    
     # calculate codebook, labels n stuff
     image = Image.open(document_image_filename)
     im_arr = np.asarray(image, dtype='float32')
@@ -54,7 +60,7 @@ def project():
     desc = desc.T
     codebook, labels = kmeans2(desc, n_centroids, iter=20, minit='points')  
      
-    
+    print "Calculating bag-of-feature representation for every GT word..."
     
     # calculate bag of feature representations of each word marked by the ground truth
     calc = Calculator(codebook, labels, frames)
@@ -62,12 +68,21 @@ def project():
     for g in GT:
         bagOfFeatures.append(calc.getHistogramOfWord(g))
         
+    
+    bagOfWords = []
+    for g in GT:
+        bagOfWords.append(g)
+        
 #     print bagOfFeatures
 #     print bagOfFeatures.shape
         
+    print "Filling Inverted File Structure..."
+        
     IFS = {}
+    IFSS = {}
     for i in range(n_centroids):
-        IFS[i]=[]
+        IFS[i] = []
+        IFSS[i] = []
         
     i = 0
     for word in bagOfFeatures:
@@ -75,41 +90,70 @@ def project():
         for k in word:
             if k>0:
                 IFS[j].append(i)
+                IFSS[j].append(bagOfWords[i])
             j += 1      
         i += 1
 
         
-   #"the" als Testword definiert
+#     "the" als Testword definiert
+    print "Initializing test word..."
      
     test = GT[testword_number]
   
     testHisto = calc.getHistogramOfWord(test)
+    testSpatial = calc.getSpatialPyramidVector(test)
 
+    print "Finding candidates for camparison..."
   
     newSet = []
+    newSetSpatial = []
     j = 0
     for i in testHisto:
         if i > 0:
             newSet = newSet + IFS[j]
+            newSetSpatial = newSetSpatial + IFSS[j]
         j += 1
+        
+    newSetSpatial = np.array(newSetSpatial)
+    newSetSpatial = np.unique(newSetSpatial)
   
     newSet = np.array(newSet)
     newSet = np.unique(newSet)
 #     newSet = newSet[:]
 #     print "Inverted FileStrukture %s"  % newSet
-     
-    testHisto = calc.getHistogramOfWord(test)
+    
     testHisto = np.array([testHisto])    
      
     bagOfFeatures = np.array(bagOfFeatures)
     bagOfFeatures = bagOfFeatures[newSet]
     
+    bagOfWords = np.array(bagOfWords)    
+    bagOfWords = bagOfWords[newSet]
+    
+    spatialVectors = []
+    for word in bagOfWords:
+        spatialVectors.append(calc.getSpatialPyramidVector(word))
+    spatialVectors = np.array(spatialVectors)
+    
 #     print bagOfFeatures.shape
+    print "Calculating distances..."
      
     vecDist = scipy.spatial.distance.cdist(testHisto, bagOfFeatures, metric="cityblock")
     vecDist = np.argsort(vecDist)
     vecDist = vecDist[0,1:10]
     
+    print "Drawing results..."
+    draw_plot(GT[testword_number], GT[vecDist], im_arr)
+    
+    print "Calculating distances using the spatial pyramid..."
+    
+    testSpatial = np.array([testSpatial])
+     
+    vecDist = scipy.spatial.distance.cdist(testSpatial, spatialVectors, metric="cityblock")
+    vecDist = np.argsort(vecDist)
+    vecDist = vecDist[0,1:10]
+    
+    print "Drawing results..."
     draw_plot(GT[testword_number], GT[vecDist], im_arr)
 
 def draw_plot(test_word,words_found, im_arr):
