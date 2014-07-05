@@ -27,9 +27,9 @@ def project():
     print "Initializing program..."
     
     #Constants
-    step_size = 20
-    cell_size = 2
-    n_centroids = 5
+    step_size = 10
+    cell_size = 5
+    n_centroids = 200
     
     testword_number = 9
     
@@ -161,7 +161,8 @@ def project():
         percentages.append(calculate_accuary(i, vecDist, words, GT, im_arr))
         
     percentages = np.array(percentages)
-    print "Durchschnittliche Trefferrate: %s" % np.mean(percentages)
+    print percentages
+    print "Durchschnittliche Trefferrate: %s %%" % np.around(np.mean(percentages), 2)
 
 def draw_plot(test_word, words_found, words_should_be, im_arr):
     
@@ -218,7 +219,7 @@ def calculate_accuary(test_word_number, words_found_number, words, GT, im_arr):
 #     print "Words should (Nr):\t %s" % words_should_be
 #     print "Words found: \t\t %s" % words_array
 #     print "Words found (Nr):\t %s" % words_found_number
-    print "Word [%s] \t Count of found words: %s, count of correct words: %s (%s%%)" % (string, len(words_array),words_right_count, percentage)
+#     print "Word [%s] \t Count of found words: %s, count of correct words: %s (%s%%)" % (string, len(words_array),words_right_count, percentage)
     
 #     draw_plot(GT[test_word_number], GT[words_found_number], GT[words_should_be], im_arr)
     return percentage
