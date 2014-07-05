@@ -27,9 +27,9 @@ def project():
     print "Initializing program..."
     
     #Constants
-    step_size = 10
-    cell_size = 5
-    n_centroids = 50
+    step_size = 20
+    cell_size = 2
+    n_centroids = 5
     
     testword_number = 9
     
@@ -139,13 +139,10 @@ def project():
     
 #     print bagOfFeatures.shape
     print "Calculating distances..."
-     
-    vecDist = scipy.spatial.distance.cdist(testHisto, bagOfFeatures, metric="cityblock")
-    vecDist = np.argsort(vecDist)
-    vecDist = vecDist[0,1:10]
-    
-    print "Drawing results..."
-#     draw_plot(GT[testword_number], GT[vecDist], im_arr)
+#      
+#     vecDist = scipy.spatial.distance.cdist(testHisto, bagOfFeatures, metric="cityblock")
+#     vecDist = np.argsort(vecDist)
+#     vecDist = vecDist[0,1:10]
     
     print "Calculating distances using the spatial pyramid..."
     
@@ -155,10 +152,16 @@ def project():
     vecDist = np.argsort(vecDist)
     vecDist = vecDist[0,1:10]
     
+    
     print "Drawing results..."
-    calculate_accuary(testword_number, vecDist, words, GT, im_arr)
-
-
+    
+    percentages = []
+    
+    for i in range(len(GT)):
+        percentages.append(calculate_accuary(i, vecDist, words, GT, im_arr))
+        
+    percentages = np.array(percentages)
+    print "Durchschnittliche Trefferrate: %s" % np.mean(percentages)
 
 def draw_plot(test_word, words_found, words_should_be, im_arr):
     
@@ -192,21 +195,33 @@ def calculate_accuary(test_word_number, words_found_number, words, GT, im_arr):
     
     k = 0
     for i in words:
-        if string==i:
+        if string==i and k!=test_word_number:
             words_should_be.append(k)
         k += 1
         
     words_should_be = np.array(words_should_be)
     words_array = words[words_found_number]
 
-    print "Testword: \t\t [%s]" % string
-    print "Testword (Nr) \t\t %s" % test_word_number
-    print "Words should: \t\t %s" % words[words_should_be]
-    print "Words should (Nr):\t %s" % words_should_be
-    print "Words found: \t\t %s" % words_array
-    print "Words found (Nr):\t %s" % words_found_number
+    words_right_count = 0
     
-    draw_plot(GT[test_word_number], GT[words_found_number], GT[words_should_be], im_arr)
+    for i in words_array:
+        if i==string:
+            words_right_count +=1
+    
+    percentage = 0
+    if words_right_count > 0:
+        percentage=((float(100)/float(len(words_array)))*float(words_right_count))
+            
+#     print "Testword: \t\t [%s]" % string
+#     print "Testword (Nr) \t\t %s" % test_word_number
+#     print "Words should: \t\t %s" % words[words_should_be]
+#     print "Words should (Nr):\t %s" % words_should_be
+#     print "Words found: \t\t %s" % words_array
+#     print "Words found (Nr):\t %s" % words_found_number
+    print "Word [%s] \t Count of found words: %s, count of correct words: %s (%s%%)" % (string, len(words_array),words_right_count, percentage)
+    
+#     draw_plot(GT[test_word_number], GT[words_found_number], GT[words_should_be], im_arr)
+    return percentage
 
 if __name__ == '__main__':
     project()

@@ -2,6 +2,8 @@ import numpy as np
 
 class Calculator(object):
     
+    
+    
     def __init__(self, centroids, des_label, des_coords):
         self.centroids = centroids
         self.des_label = des_label
