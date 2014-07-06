@@ -27,7 +27,7 @@ def project():
     print "Initializing program..."
     
     #Constants
-    step_size = 10
+    step_size = 20
     cell_size = 5
     n_centroids = 200
     
@@ -74,7 +74,8 @@ def project():
     bagOfWords = []
     for g in GT:
         bagOfWords.append(g)
-        
+    
+#     print len(bagOfWords)
 #     print bagOfFeatures
 #     print bagOfFeatures.shape
         
@@ -129,9 +130,14 @@ def project():
     bagOfFeatures = np.array(bagOfFeatures)
     bagOfFeatures = bagOfFeatures[newSet]
     
+#     print bagOfFeatures.shape
+    
     bagOfWords = np.array(bagOfWords)    
     bagOfWords = bagOfWords[newSet]
     
+    print "bag of words shape %s" % str(bagOfWords.shape)
+#     print bagOfWords
+        
     spatialVectors = []
     for word in bagOfWords:
         spatialVectors.append(calc.getSpatialPyramidVector(word))
@@ -147,22 +153,33 @@ def project():
     print "Calculating distances using the spatial pyramid..."
     
     testSpatial = np.array([testSpatial])
-     
-    vecDist = scipy.spatial.distance.cdist(testSpatial, spatialVectors, metric="cityblock")
-    vecDist = np.argsort(vecDist)
-    vecDist = vecDist[0,1:10]
     
+#     print testSpatial
+    
+    print "shape spacialvectors %s" % str(spatialVectors.shape)
+#     print "shape testspatial %s" % str(testSpatial.shape)
+     
+    vecDist = scipy.spatial.distance.cdist(spatialVectors, spatialVectors, metric="cityblock")
+    vecDist = np.argsort(vecDist)
+#     vecDist = vecDist[0,1:10]
+    
+#     print vecDist.shape
     
     print "Drawing results..."
     
-    percentages = []
+    precision = np.zeros(len(GT))
+    recall = np.zeros(len(GT))
+    
+    print vecDist.shape
+    print precision.shape
+    print recall.shape
     
     for i in range(len(GT)):
-        percentages.append(calculate_accuary(i, vecDist, words, GT, im_arr))
+        precision[i], recall[i] = calculate_accuary(i, vecDist[i,1:3], words, GT, im_arr)
         
-    percentages = np.array(percentages)
-    print percentages
-    print "Durchschnittliche Trefferrate: %s %%" % np.around(np.mean(percentages), 2)
+    
+#     print percentages
+    print "averrage precision: %s %%, averrage recall: %s %%" % (np.around(np.mean(precision), 2), np.around(np.mean(recall), 2))
 
 def draw_plot(test_word, words_found, words_should_be, im_arr):
     
@@ -209,20 +226,23 @@ def calculate_accuary(test_word_number, words_found_number, words, GT, im_arr):
         if i==string:
             words_right_count +=1
     
-    percentage = 0
-    if words_right_count > 0:
-        percentage=((float(100)/float(len(words_array)))*float(words_right_count))
-            
+    precision = float(words_right_count)/float(len(words_array))
+    if len(words_should_be)>0:
+        recall = float(words_right_count)/float(len(words_should_be))
+    else:
+        recall = 1
+    
 #     print "Testword: \t\t [%s]" % string
 #     print "Testword (Nr) \t\t %s" % test_word_number
-#     print "Words should: \t\t %s" % words[words_should_be]
-#     print "Words should (Nr):\t %s" % words_should_be
+#     if len(words_should_be)>0:
+#         print "Words should: \t\t %s" % words[words_should_be]
+#         print "Words should (Nr):\t %s" % words_should_be
 #     print "Words found: \t\t %s" % words_array
 #     print "Words found (Nr):\t %s" % words_found_number
 #     print "Word [%s] \t Count of found words: %s, count of correct words: %s (%s%%)" % (string, len(words_array),words_right_count, percentage)
-    
+#     print " "
 #     draw_plot(GT[test_word_number], GT[words_found_number], GT[words_should_be], im_arr)
-    return percentage
+    return precision, recall
 
 if __name__ == '__main__':
     project()
