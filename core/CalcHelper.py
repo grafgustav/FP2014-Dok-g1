@@ -42,13 +42,13 @@ class Calculator(object):
             result[j]  = i
             j += 1
         
-        leftBorders = [word[0], word[1], round(word[2]/2.0), word[3]]
+        leftBorders = [word[0], word[1], (word[0]+round((word[2]-word[0])/2.0)), word[3]]
         
         for i in self.getHistogramOfWord(leftBorders):
             result[j] = i 
             j += 1
         
-        rightBorders = [round(word[2]/2.0), word[1], word[2], word[3]]
+        rightBorders = [word[0]+round((word[2]-word[0])/2.0), word[1], word[2], word[3]]
         
         for i in self.getHistogramOfWord(rightBorders):
             result[j] = i 
