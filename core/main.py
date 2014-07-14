@@ -29,8 +29,8 @@ def project():
     
     #Constants
     step_size = 5
-    cell_size = 5
-    n_centroids = 1000
+    cell_size = 10
+    n_centroids = 1
     
     testword_number = 113
     
@@ -54,22 +54,27 @@ def project():
     words = np.array(words)
     
     print "Calculating Codebook..."
-    print GT
+#     print GT
     
   
+   
     
     
     # calculate codebook, labels n stuff
     image = Image.open(document_image_filename)
     im_arr = np.asarray(image, dtype='float32')
+    
+    draw_plot(GT, im_arr)
+    
     frames, desc = vlfeat.vl_dsift(im_arr, step=step_size, size=cell_size) 
     frames = frames.T
     desc = desc.T
-    pickle.dump( frames, open( "frames5-1000cen.p", "wb" ) )
-    pickle.dump( desc, open( "desc5-1000cen.p", "wb" ) )
-    codebook, labels = kmeans2(desc, n_centroids, iter=50, minit='points')  
-    pickle.dump( codebook, open( "codebook5-1000cen.p", "wb" ) )
-    pickle.dump( labels, open( "labels5-1000cen.p", "wb" ) )
+#     pickle.dump( frames, open( "frames5-1000cen.p", "wb" ) )
+#     pickle.dump( desc, open( "desc5-1000cen.p", "wb" ) )
+    print "book"
+    codebook, labels = kmeans2(desc, n_centroids, iter=10, minit='points')  
+#     pickle.dump( codebook, open( "codebook5-1000cen.p", "wb" ) )
+#     pickle.dump( labels, open( "labels5-1000cen.p", "wb" ) )
 #     frames = pickle.load(open('frames.p', 'rb')) 
 #     desc = pickle.load(open('desc.p', 'rb'))
 #     codebook = pickle.load(open('codebook.p', 'rb')) 
@@ -77,17 +82,17 @@ def project():
     print "Calculating bag-of-feature representation for every GT word..."
     
     # calculate bag of feature representations of each word marked by the ground truth
-#     calc = Calculator(codebook, labels, frames)
+    calc = Calculator(codebook, labels, frames)
     bagOfFeatures = []
     for g in GT:
         bagOfFeatures.append(calc.getHistogramOfWord(g))
            
-    pickle.dump( bagOfFeatures, open( "bagOfFeatures5-1000cen.p", "wb" ) )
+#     pickle.dump( bagOfFeatures, open( "bagOfFeatures5-1000cen.p", "wb" ) )
 #     bagOfFeatures = pickle.load(open('bagOfFeatures.p','rb'))
     bagOfWords = []
     for g in GT:
         bagOfWords.append(g)
-    pickle.dump( bagOfWords, open( "bagOfWords5-1000cen.p", "wb" ) )
+#     pickle.dump( bagOfWords, open( "bagOfWords5-1000cen.p", "wb" ) )
 #     bagOfWords = pickle.load(open('bagOfWords.p','rb'))
 #     print len(bagOfWords)
 #     print bagOfFeatures
@@ -207,8 +212,9 @@ def project():
 #     print percentages
     print "averrage precision: %s , averrage recall: %s " % (np.around(np.mean(precision_erg), 2), np.around(np.mean(recall), 2))
 
-def draw_plot(words_should_be, test_word, words_found,  im_arr):
+def draw_plot( words_found,im_arr):
     
+#     test_word, words_should_be
     ''' 
     draws a plot for the results. blue rectangle is for test word. red rectangle is for similar word found.
     :param: test_word: an array with 2 koordinates, stored like the GT.
@@ -224,7 +230,11 @@ def draw_plot(words_should_be, test_word, words_found,  im_arr):
     for i in words_found:
         rect = Rectangle((i[0], i[1]), (i[2]-i[0]), (i[3]-i[1]), alpha=1, lw=1, color="red", fill=False)
         ax.add_patch(rect)
-    
+#     for i in words_should_be:
+#         rect_1 = Rectangle((i[0], i[1]), (i[2]-i[0]), (i[3]-i[1]), alpha=1, lw=1, color="green", fill=False)
+#         ax.add_patch(rect_1)
+#     rect_2 = Rectangle((test_word[0], test_word[1]), (test_word[2]-test_word[0]), (test_word[3]-test_word[1]), alpha=1, lw=1, color="blue", fill=False)
+#     ax.add_patch(rect_2)
     
     plt.show()
 def ber_pre (words, testword_number):
