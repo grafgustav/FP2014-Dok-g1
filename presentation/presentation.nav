@@ -1,0 +1,40 @@
+\beamer@endinputifotherversion {3.24pt}
+\headcommand {\slideentry {0}{0}{1}{1/1}{}{0}}
+\headcommand {\beamer@framepages {1}{1}}
+\headcommand {\sectionentry {1}{Einf\IeC {\"u}hrung}{2}{Einf\IeC {\"u}hrung}{0}}
+\headcommand {\beamer@sectionpages {1}{1}}
+\headcommand {\beamer@subsectionpages {1}{1}}
+\headcommand {\beamer@subsectionentry {0}{1}{1}{2}{Die Aufgabe}}\headcommand {\beamer@subsectionpages {2}{1}}
+\headcommand {\slideentry {1}{1}{1}{2/2}{Die Aufgabe}{0}}
+\headcommand {\beamer@framepages {2}{2}}
+\headcommand {\beamer@subsectionentry {0}{1}{2}{3}{Vorbereitungen}}\headcommand {\beamer@subsectionpages {2}{2}}
+\headcommand {\slideentry {1}{2}{1}{3/3}{Vorbereitungen}{0}}
+\headcommand {\beamer@framepages {3}{3}}
+\headcommand {\sectionentry {2}{Durchf\IeC {\"u}hrung}{4}{Durchf\IeC {\"u}hrung}{0}}
+\headcommand {\beamer@sectionpages {2}{3}}
+\headcommand {\beamer@subsectionpages {3}{3}}
+\headcommand {\beamer@subsectionentry {0}{2}{1}{4}{Ground Truth}}\headcommand {\beamer@subsectionpages {4}{3}}
+\headcommand {\slideentry {2}{1}{1}{4/4}{Ground Truth}{0}}
+\headcommand {\beamer@framepages {4}{4}}
+\headcommand {\beamer@subsectionentry {0}{2}{2}{5}{Inverted File Structure}}\headcommand {\beamer@subsectionpages {4}{4}}
+\headcommand {\slideentry {2}{2}{1}{5/5}{Inverted File Structure}{0}}
+\headcommand {\beamer@framepages {5}{5}}
+\headcommand {\beamer@subsectionentry {0}{2}{3}{6}{Spatial Pyramid}}\headcommand {\beamer@subsectionpages {5}{5}}
+\headcommand {\slideentry {2}{3}{1}{6/6}{Spatial Pyramid}{0}}
+\headcommand {\beamer@framepages {6}{6}}
+\headcommand {\sectionentry {3}{Ergebnisse}{7}{Ergebnisse}{0}}
+\headcommand {\beamer@sectionpages {4}{6}}
+\headcommand {\beamer@subsectionpages {6}{6}}
+\headcommand {\beamer@subsectionentry {0}{3}{1}{7}{G\IeC {\"u}tema\IeC {\ss }e}}\headcommand {\beamer@subsectionpages {7}{6}}
+\headcommand {\slideentry {3}{1}{1}{7/7}{G\IeC {\"u}tema\IeC {\ss }e}{0}}
+\headcommand {\beamer@framepages {7}{7}}
+\headcommand {\beamer@subsectionentry {0}{3}{2}{8}{Ergebnisse}}\headcommand {\beamer@subsectionpages {7}{7}}
+\headcommand {\slideentry {3}{2}{1}{8/8}{Ergebnisse}{0}}
+\headcommand {\beamer@framepages {8}{8}}
+\headcommand {\slideentry {3}{2}{2}{9/9}{Ergebnisse}{0}}
+\headcommand {\beamer@framepages {9}{9}}
+\headcommand {\beamer@partpages {1}{9}}
+\headcommand {\beamer@subsectionpages {8}{9}}
+\headcommand {\beamer@sectionpages {7}{9}}
+\headcommand {\beamer@documentpages {9}}
+\headcommand {\def \inserttotalframenumber {8}}
