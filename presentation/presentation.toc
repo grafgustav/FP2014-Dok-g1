@@ -1,0 +1,11 @@
+\beamer@endinputifotherversion {3.24pt}
+\beamer@sectionintoc {1}{Einf\IeC {\"u}hrung}{2}{0}{1}
+\beamer@subsectionintoc {1}{1}{Die Aufgabe}{2}{0}{1}
+\beamer@subsectionintoc {1}{2}{Vorbereitungen}{3}{0}{1}
+\beamer@sectionintoc {2}{Durchf\IeC {\"u}hrung}{4}{0}{2}
+\beamer@subsectionintoc {2}{1}{Ground Truth}{4}{0}{2}
+\beamer@subsectionintoc {2}{2}{Inverted File Structure}{5}{0}{2}
+\beamer@subsectionintoc {2}{3}{Spatial Pyramid}{6}{0}{2}
+\beamer@sectionintoc {3}{Ergebnisse}{7}{0}{3}
+\beamer@subsectionintoc {3}{1}{G\IeC {\"u}tema\IeC {\ss }e}{7}{0}{3}
+\beamer@subsectionintoc {3}{2}{Ergebnisse}{8}{0}{3}

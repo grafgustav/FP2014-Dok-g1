@@ -257,7 +257,6 @@ def calculate_accuary(test_word_number, words_found_number, words, GT, im_arr):
     #       Berechenung von averrage precision und averrage recall
     words_should_be = []
     k = 0
-    # Hier habe ich words mit GT ersetzt
     for i in words:
         if string==i :
             words_should_be.append(k)
@@ -271,10 +270,9 @@ def calculate_accuary(test_word_number, words_found_number, words, GT, im_arr):
         if i==string:
             words_right_count +=1
     # Anzahl alle richtige Treffer durch den Anzahl von 
-#     precision = float(words_right_count)/float(len(words_array))
-    precision = float(words_right_count)/float(len(words_found_number))
+    precision = float(words_right_count)/float(len(words_array))
     if len(words_should_be)>0:
-        recall = float(words_right_count)/float(len(words_should_be))
+        recall = float(len(words_should_be))/float(words_right_count)
     else:
         recall = 1
     
